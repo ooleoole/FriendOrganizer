@@ -1,9 +1,8 @@
 ﻿using System.Windows;
 using Autofac;
-using FriendOrganizer.Data.ViewModel;
-using FriendOrganizer.Startup;
+using FriendOrganizer.UI.Startup;
 
-namespace FriendOrganizer
+namespace FriendOrganizer.UI
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -14,7 +13,7 @@ namespace FriendOrganizer
         {
             var bootstrapper = new Bootstrapper();
             var container = bootstrapper.Bootstrap();
-            var mainViewModel = container.Resolve<MainWindow>();
+            var mainViewModel = container.Resolve<UI.MainWindow>();
             mainViewModel.Show();
         }
     }

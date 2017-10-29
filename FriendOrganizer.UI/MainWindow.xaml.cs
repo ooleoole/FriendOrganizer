@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using FriendOrganizer.Data.ViewModel;
+using FriendOrganizer.UI.ViewModel;
 
-namespace FriendOrganizer
+namespace FriendOrganizer.UI
 {
 
     public partial class MainWindow : Window
@@ -19,7 +19,7 @@ namespace FriendOrganizer
 
         private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-           await _viewModel.Load();
+           await _viewModel.LoadAsync();
         }
     }
 }
