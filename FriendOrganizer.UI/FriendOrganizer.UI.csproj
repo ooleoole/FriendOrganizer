@@ -37,7 +37,14 @@
     <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -61,7 +68,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Data\ViewModel\FriendDataService.cs" />
+    <Compile Include="Data\FriendDataService.cs" />
     <Compile Include="Data\ViewModel\MainViewModel.cs" />
     <Compile Include="Startup\Bootstrapper.cs" />
     <Page Include="MainWindow.xaml">
@@ -113,7 +120,7 @@
       <Name>FriendOrganizer.DataAccess</Name>
     </ProjectReference>
     <ProjectReference Include="..\FriendOrganizer.Model\FriendOrganizer.Model.csproj">
-      <Project>{42bb16b6-bd8e-4d01-b869-cf4f2b1631b2}</Project>
+      <Project>{df48aebc-fec5-4919-a5f8-c9f20f36d39a}</Project>
       <Name>FriendOrganizer.Model</Name>
     </ProjectReference>
   </ItemGroup>
