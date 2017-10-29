@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FriendOrganizer.DataAccess
+﻿namespace FriendOrganizer.DataAccess
 {
     public class Class1
     {
