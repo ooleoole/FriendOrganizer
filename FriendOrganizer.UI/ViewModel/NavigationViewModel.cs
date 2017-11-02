@@ -1,10 +1,12 @@
-﻿using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
-using FriendOrganizer.Model;
+﻿using FriendOrganizer.Model;
 using FriendOrganizer.UI.Data;
 using FriendOrganizer.UI.Event;
 using Prism.Events;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System;
+using System.Linq;
+using FriendOrganizer.UI.Data.Lookups;
 
 namespace FriendOrganizer.UI.ViewModel
 {
@@ -12,36 +14,19 @@ namespace FriendOrganizer.UI.ViewModel
     {
         private readonly IFriendLookupDataService _friendLookupService;
         private readonly IEventAggregator _eventAggregator;
-        private NavigationItemViewModel _selectedFriend;
 
         public ObservableCollection<NavigationItemViewModel> Friends { get; }
 
-        public NavigationItemViewModel SelectedFriend
-        {
-            get => _selectedFriend;
-            set
-            {
-                _selectedFriend = value;
-                OnPropertyChanged();
-                if (_selectedFriend != null)
-                {
-                    _eventAggregator.GetEvent<OpenFriendDetailViewEvent>()
-                        .Publish(_selectedFriend.Id);
-                }
-            }
-        }
         public NavigationViewModel(IFriendLookupDataService friendLookupService,
             IEventAggregator eventAggregator)
         {
             _friendLookupService = friendLookupService;
             _eventAggregator = eventAggregator;
             Friends = new ObservableCollection<NavigationItemViewModel>();
-            _eventAggregator.GetEvent<AfterFriendSavedEvent>()
-                .Subscribe(AfterFriendSavedEvent);
-
+            _eventAggregator.GetEvent<AfterFriendSavedEvent>().Subscribe(AfterFriendSaved);
         }
 
-        private void AfterFriendSavedEvent(AfterFriendSavedEventArgs obj)
+        private void AfterFriendSaved(AfterFriendSavedEventArgs obj)
         {
             var lookupItem = Friends.Single(l => l.Id == obj.Id);
             lookupItem.DisplayMember = obj.DisplayMember;
@@ -53,11 +38,11 @@ namespace FriendOrganizer.UI.ViewModel
             Friends.Clear();
             foreach (var item in lookup)
             {
-                Friends.Add(new NavigationItemViewModel(item.Id, item.DisplayMember));
+                Friends.Add(new NavigationItemViewModel(item.Id, item.DisplayMember,
+                    _eventAggregator));
             }
         }
 
-
-
+       
     }
 }
