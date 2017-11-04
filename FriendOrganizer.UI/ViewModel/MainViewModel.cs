@@ -8,74 +8,77 @@ using System.Windows.Input;
 
 namespace FriendOrganizer.UI.ViewModel
 {
-    public class MainViewModel : ViewModelBase
+  public class MainViewModel : ViewModelBase
+  {
+    private readonly IEventAggregator _eventAggregator;
+    private readonly Func<IFriendDetailViewModel> _friendDetailViewModelCreator;
+    private IDetailViewModel _detailViewModel;
+    private readonly IMessageDialogService _messageDialogService;
+
+    public MainViewModel(INavigationViewModel navigationViewModel,
+      Func<IFriendDetailViewModel> friendDetailViewModelCreator,
+      IEventAggregator eventAggregator,
+      IMessageDialogService messageDialogService)
     {
-        private readonly IEventAggregator _eventAggregator;
-        private readonly Func<IFriendDetailViewModel> _friendDetailViewModelCreator;
-        private IFriendDetailViewModel _friendDetailViewModel;
-        private readonly IMessageDialogService _messageDialogService;
+      _eventAggregator = eventAggregator;
+      _friendDetailViewModelCreator = friendDetailViewModelCreator;
+      _messageDialogService = messageDialogService;
 
+      _eventAggregator.GetEvent<OpenDetailViewEvent>()
+       .Subscribe(OnOpenDetailView);
+      _eventAggregator.GetEvent<AfterDetailDeletedEvent>()
+        .Subscribe(AfterDetailDeleted);
 
-        public IFriendDetailViewModel FriendDetailViewModel
-        {
-            get => _friendDetailViewModel;
-            private set
-            {
-                _friendDetailViewModel = value;
-                OnPropertyChanged();
-            }
-        }
+      CreateNewDetailCommand = new DelegateCommand<Type>(OnCreateNewDetailExecute);
 
-        public ICommand CreateNewFriendCommand { get; }
-
-        public INavigationViewModel NavigationViewModel { get; }
-
-        public MainViewModel(INavigationViewModel navigationViewModel,
-          Func<IFriendDetailViewModel> friendDetailViewModelCreator,
-          IEventAggregator eventAggregator,
-          IMessageDialogService messageDialogService)
-        {
-            _eventAggregator = eventAggregator;
-            _friendDetailViewModelCreator = friendDetailViewModelCreator;
-            _messageDialogService = messageDialogService;
-
-            _eventAggregator.GetEvent<OpenFriendDetailViewEvent>()
-             .Subscribe(OnOpenFriendDetailView);
-            _eventAggregator.GetEvent<AfterFriendDeletedEvent>()
-              .Subscribe(AfterFriendDeleted);
-
-            CreateNewFriendCommand = new DelegateCommand(OnCreateNewFriendExecute);
-
-            NavigationViewModel = navigationViewModel;
-        }
-
-        public async Task LoadAsync()
-        {
-            await NavigationViewModel.LoadAsync();
-        }
-
-        private async void OnOpenFriendDetailView(int? friendId)
-        {
-            if (FriendDetailViewModel != null && FriendDetailViewModel.HasChanges)
-            {
-                var result = _messageDialogService.ShowOkCancelDialog("You've made changes. Navigate away?", "Question");
-                if (result == MessageDialogResult.Cancel)
-                {
-                    return;
-                }
-            }
-            FriendDetailViewModel = _friendDetailViewModelCreator();
-            await FriendDetailViewModel.LoadAsync(friendId);
-        }
-
-        private void OnCreateNewFriendExecute()
-        {
-            OnOpenFriendDetailView(null);
-        }
-
-        private void AfterFriendDeleted(int friendId)
-        {
-            FriendDetailViewModel = null;
-        }
+      NavigationViewModel = navigationViewModel;
     }
+
+    public async Task LoadAsync()
+    {
+      await NavigationViewModel.LoadAsync();
+    }
+
+    public ICommand CreateNewDetailCommand { get; }
+
+    public INavigationViewModel NavigationViewModel { get; }
+
+    public IDetailViewModel DetailViewModel
+    {
+      get => _detailViewModel;
+        private set
+      {
+        _detailViewModel = value;
+        OnPropertyChanged();
+      }
+    }
+
+    private async void OnOpenDetailView(OpenDetailViewEventArgs args)
+    {
+      if (DetailViewModel != null && DetailViewModel.HasChanges)
+      {
+        var result = _messageDialogService.ShowOkCancelDialog("You've made changes. Navigate away?", "Question");
+        if (result == MessageDialogResult.Cancel)
+        {
+          return;
+        }
+      }
+
+        if (args.ViewModelName == nameof(FriendDetailViewModel))
+            DetailViewModel = _friendDetailViewModelCreator();
+
+        if (DetailViewModel != null) await DetailViewModel.LoadAsync(args.Id);
+    }
+
+    private void OnCreateNewDetailExecute(Type viewModelType)
+    {
+      OnOpenDetailView(
+        new OpenDetailViewEventArgs { ViewModelName = viewModelType.Name });
+    }
+
+    private void AfterDetailDeleted(AfterDetailDeletedEventArgs args)
+    {
+      DetailViewModel = null;
+    }
+  }
 }
