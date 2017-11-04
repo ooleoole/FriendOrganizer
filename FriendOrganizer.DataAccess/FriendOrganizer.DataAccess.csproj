@@ -56,6 +56,10 @@
     <Compile Include="Migrations\201710291438104_InitalDb1.Designer.cs">
       <DependentUpon>201710291438104_InitalDb1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711040933567_AddedProgramingLang.cs" />
+    <Compile Include="Migrations\201711040933567_AddedProgramingLang.Designer.cs">
+      <DependentUpon>201711040933567_AddedProgramingLang.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -68,6 +72,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710291438104_InitalDb1.resx">
       <DependentUpon>201710291438104_InitalDb1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711040933567_AddedProgramingLang.resx">
+      <DependentUpon>201711040933567_AddedProgramingLang.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

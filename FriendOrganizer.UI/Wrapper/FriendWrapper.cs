@@ -4,41 +4,45 @@ using System.Collections.Generic;
 
 namespace FriendOrganizer.UI.Wrapper
 {
-  public class FriendWrapper : ModelWrapper<Friend>
-  {
-
-      public int Id => Model.Id;
-
-      public string FirstName
-      {
-          get => GetValue<string>();
-          set => SetValue(value);
-      }
-
-      public string LastName
-      {
-          get => GetValue<string>();
-          set => SetValue(value);
-      }
-
-      public string Email
-      {
-          get => GetValue<string>();
-          set => SetValue(value);
-      }
+    public class FriendWrapper : ModelWrapper<Friend>
+    {
         public FriendWrapper(Friend model) : base(model)
-    {
+        {
+        }
+
+        public int Id => Model.Id;
+
+        public string FirstName
+        {
+            get => GetValue<string>();
+            set => SetValue(value);
+        }
+
+        public string LastName
+        {
+            get => GetValue<string>();
+            set => SetValue(value);
+        }
+
+        public string Email
+        {
+            get => GetValue<string>();
+            set => SetValue(value);
+        }
+
+        public int? FavoriteLanguageId
+        {
+            get => GetValue<int?>();
+            set => SetValue(value);
+        }
+
+        protected override IEnumerable<string> ValidateProperty(string propertyName)
+        {
+            if (propertyName == nameof(FirstName))
+                if (string.Equals(FirstName, "Robot", StringComparison.OrdinalIgnoreCase))
+                {
+                    yield return "Robots are not valid friends";
+                }
+        }
     }
-
-
-
-    protected override IEnumerable<string> ValidateProperty(string propertyName)
-    {
-        if (propertyName == nameof(FirstName))
-            if (string.Equals(FirstName, "Robot", StringComparison.OrdinalIgnoreCase))
-            {
-                yield return "Robots are not valid friends";
-            }
-    }
-  }
 }
