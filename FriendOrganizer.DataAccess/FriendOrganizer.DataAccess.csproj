@@ -60,6 +60,10 @@
     <Compile Include="Migrations\201711040933567_AddedProgramingLang.Designer.cs">
       <DependentUpon>201711040933567_AddedProgramingLang.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711041005237_AddedPhooneNum.cs" />
+    <Compile Include="Migrations\201711041005237_AddedPhooneNum.Designer.cs">
+      <DependentUpon>201711041005237_AddedPhooneNum.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -75,6 +79,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711040933567_AddedProgramingLang.resx">
       <DependentUpon>201711040933567_AddedProgramingLang.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711041005237_AddedPhooneNum.resx">
+      <DependentUpon>201711041005237_AddedPhooneNum.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
