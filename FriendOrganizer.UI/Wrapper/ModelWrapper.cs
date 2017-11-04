@@ -17,14 +17,14 @@ namespace FriendOrganizer.UI.Wrapper
     protected virtual void SetValue<TValue>(TValue value,
       [CallerMemberName]string propertyName = null)
     {
-      typeof(T).GetProperty(propertyName)?.SetValue(Model, value);
+      typeof(T).GetProperty(propertyName).SetValue(Model, value);
       OnPropertyChanged(propertyName);
       ValidatePropertyInternal(propertyName,value);
     }
 
       protected virtual TValue GetValue<TValue>([CallerMemberName]string propertyName = null)
     {
-      return (TValue)typeof(T).GetProperty(propertyName)?.GetValue(Model);
+      return (TValue)typeof(T).GetProperty(propertyName).GetValue(Model);
     }
 
     private void ValidatePropertyInternal(string propertyName,object currentValue)

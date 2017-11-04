@@ -6,11 +6,9 @@ namespace FriendOrganizer.UI.Wrapper
 {
     public class FriendWrapper : ModelWrapper<Friend>
     {
-        public FriendWrapper(Friend model) : base(model)
-        {
-        }
+        
 
-        public int Id => Model.Id;
+      public int Id => Model.Id;
 
         public string FirstName
         {
@@ -38,11 +36,19 @@ namespace FriendOrganizer.UI.Wrapper
 
         protected override IEnumerable<string> ValidateProperty(string propertyName)
         {
-            if (propertyName == nameof(FirstName))
-                if (string.Equals(FirstName, "Robot", StringComparison.OrdinalIgnoreCase))
-                {
-                    yield return "Robots are not valid friends";
-                }
+            switch (propertyName)
+            {
+                case nameof(FirstName):
+                    if (string.Equals(FirstName, "Robot", StringComparison.OrdinalIgnoreCase))
+                    {
+                        yield return "Robots are not valid friends";
+                    }
+                    break;
+            }
+        }
+        public FriendWrapper(Friend model) : base(model)
+        {
         }
     }
+
 }

@@ -6,10 +6,7 @@ namespace FriendOrganizer.Model
 {
     public class Friend
     {
-        public Friend()
-        {
-            PhoneNumbers = new Collection<FriendPhoneNumber>();
-        }
+
 
         public int Id { get; set; }
 
@@ -29,5 +26,12 @@ namespace FriendOrganizer.Model
         public ProgrammingLanguage FavoriteLanguage { get; set; }
 
         public ICollection<FriendPhoneNumber> PhoneNumbers { get; set; }
+
+        public ICollection<Meeting> Meetings { get; set; }
+        public Friend()
+        {
+            PhoneNumbers = new Collection<FriendPhoneNumber>();
+            Meetings = new Collection<Meeting>();
+        }
     }
 }

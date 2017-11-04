@@ -9,7 +9,7 @@ namespace FriendOrganizer.UI.Wrapper
 {
   public class NotifyDataErrorInfoBase : ViewModelBase, INotifyDataErrorInfo
   {
-    private readonly Dictionary<string, List<string>> _errorsByPropertyName
+    private Dictionary<string, List<string>> _errorsByPropertyName
      = new Dictionary<string, List<string>>();
 
     public bool HasErrors => _errorsByPropertyName.Any();
@@ -35,9 +35,11 @@ namespace FriendOrganizer.UI.Wrapper
       {
         _errorsByPropertyName[propertyName] = new List<string>();
       }
-        if (_errorsByPropertyName[propertyName].Contains(error)) return;
+      if (!_errorsByPropertyName[propertyName].Contains(error))
+      {
         _errorsByPropertyName[propertyName].Add(error);
         OnErrorsChanged(propertyName);
+      }
     }
 
     protected void ClearErrors(string propertyName)
