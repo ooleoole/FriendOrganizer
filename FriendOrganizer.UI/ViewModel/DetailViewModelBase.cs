@@ -14,8 +14,6 @@ namespace FriendOrganizer.UI.ViewModel
         protected readonly IMessageDialogService MessageDialogService;
         private string _title;
 
-        public abstract Task LoadAsync(int id);
-
         public ICommand SaveCommand { get; private set; }
 
         public ICommand DeleteCommand { get; private set; }
@@ -56,6 +54,8 @@ namespace FriendOrganizer.UI.ViewModel
             CloseDetailViewCommand = new DelegateCommand(OnCloseDetailViewExecute);
         }
 
+        public abstract Task LoadAsync(int id);
+
        
 
         protected abstract void OnDeleteExecute();
@@ -82,6 +82,15 @@ namespace FriendOrganizer.UI.ViewModel
                 DisplayMember = displayMember,
                 ViewModelName = this.GetType().Name
             });
+        }
+
+        protected virtual void RaiseCollectionSavedEvent()
+        {
+            EventAggregator.GetEvent<AfterCollectionSavedEvent>()
+              .Publish(new AfterCollectionSavedEventArgs
+              {
+                  ViewModelName = this.GetType().Name
+              });
         }
 
         protected virtual void OnCloseDetailViewExecute()

@@ -7,12 +7,13 @@ namespace FriendOrganizer.UI.Wrapper
 {
   public class ModelWrapper<T> : NotifyDataErrorInfoBase
   {
-    public ModelWrapper(T model)
+      public T Model { get; }
+        public ModelWrapper(T model)
     {
       Model = model;
     }
 
-    public T Model { get; }
+    
 
     protected virtual void SetValue<TValue>(TValue value,
       [CallerMemberName]string propertyName = null)
@@ -51,13 +52,11 @@ namespace FriendOrganizer.UI.Wrapper
     private void ValidateCustomErrors(string propertyName)
     {
       var errors = ValidateProperty(propertyName);
-      if (errors != null)
-      {
+        if (errors == null) return;
         foreach (var error in errors)
         {
-          AddError(propertyName, error);
+            AddError(propertyName, error);
         }
-      }
     }
 
     protected virtual IEnumerable<string> ValidateProperty(string propertyName)
