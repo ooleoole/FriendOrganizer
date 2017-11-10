@@ -2,6 +2,9 @@
 using FriendOrganizer.UI.View.Services;
 using Prism.Commands;
 using Prism.Events;
+using System;
+using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -44,7 +47,7 @@ namespace FriendOrganizer.UI.ViewModel
             }
         }
 
-        public DetailViewModelBase(IEventAggregator eventAggregator,
+        protected DetailViewModelBase(IEventAggregator eventAggregator,
           IMessageDialogService messageDialogService)
         {
             EventAggregator = eventAggregator;
@@ -56,7 +59,7 @@ namespace FriendOrganizer.UI.ViewModel
 
         public abstract Task LoadAsync(int id);
 
-       
+      
 
         protected abstract void OnDeleteExecute();
 
@@ -112,5 +115,45 @@ namespace FriendOrganizer.UI.ViewModel
                   ViewModelName = this.GetType().Name
               });
         }
+
+        protected async Task SaveWithOptimisticConcurrencyAsync(Func<Task> saveFunc,
+          Action afterSaveAction)
+        {
+            try
+            {
+                await saveFunc();
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                var databaseValues = ex.Entries.Single().GetDatabaseValues();
+                if (databaseValues == null)
+                {
+                    MessageDialogService.ShowInfoDialog("The entity has been deleted by another user");
+                    RaiseDetailDeletedEvent(Id);
+                    return;
+                }
+
+                var result = MessageDialogService.ShowOkCancelDialog("The entity has been changed in "
+                 + "the meantime by someone else. Click OK to save your changes anyway, click Cancel "
+                 + "to reload the entity from the database.", "Question");
+
+                if (result == MessageDialogResult.OK)
+                {
+                  
+                    var entry = ex.Entries.Single();
+                    entry.OriginalValues.SetValues(entry.GetDatabaseValues());
+                    await saveFunc();
+                }
+                else
+                {
+                   
+                    await ex.Entries.Single().ReloadAsync();
+                    await LoadAsync(Id);
+                }
+            };
+
+            afterSaveAction();
+        }
+
     }
 }

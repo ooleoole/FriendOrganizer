@@ -68,6 +68,10 @@
     <Compile Include="Migrations\201711041942064_AddedMeeting.Designer.cs">
       <DependentUpon>201711041942064_AddedMeeting.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711101203563_concrency.cs" />
+    <Compile Include="Migrations\201711101203563_concrency.Designer.cs">
+      <DependentUpon>201711101203563_concrency.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -89,6 +93,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711041942064_AddedMeeting.resx">
       <DependentUpon>201711041942064_AddedMeeting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711101203563_concrency.resx">
+      <DependentUpon>201711101203563_concrency.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

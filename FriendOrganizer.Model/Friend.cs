@@ -7,7 +7,6 @@ namespace FriendOrganizer.Model
     public class Friend
     {
 
-
         public int Id { get; set; }
 
         [Required]
@@ -25,6 +24,9 @@ namespace FriendOrganizer.Model
 
         public ProgrammingLanguage FavoriteLanguage { get; set; }
 
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
         public ICollection<FriendPhoneNumber> PhoneNumbers { get; set; }
 
         public ICollection<Meeting> Meetings { get; set; }
@@ -33,5 +35,7 @@ namespace FriendOrganizer.Model
             PhoneNumbers = new Collection<FriendPhoneNumber>();
             Meetings = new Collection<Meeting>();
         }
+
+       
     }
 }
