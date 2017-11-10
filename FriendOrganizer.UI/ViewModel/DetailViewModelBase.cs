@@ -17,6 +17,7 @@ namespace FriendOrganizer.UI.ViewModel
         protected readonly IMessageDialogService MessageDialogService;
         private string _title;
 
+
         public ICommand SaveCommand { get; private set; }
 
         public ICommand DeleteCommand { get; private set; }
@@ -47,8 +48,8 @@ namespace FriendOrganizer.UI.ViewModel
             }
         }
 
-        protected DetailViewModelBase(IEventAggregator eventAggregator,
-          IMessageDialogService messageDialogService)
+        public DetailViewModelBase(IEventAggregator eventAggregator,
+      IMessageDialogService messageDialogService)
         {
             EventAggregator = eventAggregator;
             MessageDialogService = messageDialogService;
@@ -59,7 +60,7 @@ namespace FriendOrganizer.UI.ViewModel
 
         public abstract Task LoadAsync(int id);
 
-      
+
 
         protected abstract void OnDeleteExecute();
 
@@ -96,11 +97,11 @@ namespace FriendOrganizer.UI.ViewModel
               });
         }
 
-        protected virtual void OnCloseDetailViewExecute()
+        protected virtual async void OnCloseDetailViewExecute()
         {
             if (HasChanges)
             {
-                var result = MessageDialogService.ShowOkCancelDialog(
+                var result = await MessageDialogService.ShowOkCancelDialogAsync(
                   "You've made changes. Close this item?", "Question");
                 if (result == MessageDialogResult.Cancel)
                 {
@@ -128,25 +129,23 @@ namespace FriendOrganizer.UI.ViewModel
                 var databaseValues = ex.Entries.Single().GetDatabaseValues();
                 if (databaseValues == null)
                 {
-                    MessageDialogService.ShowInfoDialog("The entity has been deleted by another user");
+                    await MessageDialogService.ShowInfoDialogAsync("The entity has been deleted by another user");
                     RaiseDetailDeletedEvent(Id);
                     return;
                 }
 
-                var result = MessageDialogService.ShowOkCancelDialog("The entity has been changed in "
+                var result = await MessageDialogService.ShowOkCancelDialogAsync("The entity has been changed in "
                  + "the meantime by someone else. Click OK to save your changes anyway, click Cancel "
                  + "to reload the entity from the database.", "Question");
 
                 if (result == MessageDialogResult.OK)
                 {
-                  
                     var entry = ex.Entries.Single();
                     entry.OriginalValues.SetValues(entry.GetDatabaseValues());
                     await saveFunc();
                 }
                 else
                 {
-                   
                     await ex.Entries.Single().ReloadAsync();
                     await LoadAsync(Id);
                 }

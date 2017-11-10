@@ -13,10 +13,12 @@ namespace FriendOrganizer.UI.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private readonly IEventAggregator _eventAggregator;
+        private IEventAggregator _eventAggregator;
         private IDetailViewModel _selectedDetailViewModel;
         private readonly IMessageDialogService _messageDialogService;
         private readonly IIndex<string, IDetailViewModel> _detailViewModelCreator;
+
+
 
         public ICommand CreateNewDetailCommand { get; }
 
@@ -35,11 +37,10 @@ namespace FriendOrganizer.UI.ViewModel
                 OnPropertyChanged();
             }
         }
-
         public MainViewModel(INavigationViewModel navigationViewModel,
-          IIndex<string, IDetailViewModel> detailViewModelCreator,
-          IEventAggregator eventAggregator,
-          IMessageDialogService messageDialogService)
+      IIndex<string, IDetailViewModel> detailViewModelCreator,
+      IEventAggregator eventAggregator,
+      IMessageDialogService messageDialogService)
         {
             _eventAggregator = eventAggregator;
             _detailViewModelCreator = detailViewModelCreator;
@@ -65,7 +66,6 @@ namespace FriendOrganizer.UI.ViewModel
             await NavigationViewModel.LoadAsync();
         }
 
-       
 
         private async void OnOpenDetailView(OpenDetailViewEventArgs args)
         {
@@ -82,9 +82,9 @@ namespace FriendOrganizer.UI.ViewModel
                 }
                 catch
                 {
-                    _messageDialogService.ShowInfoDialog("Could not load the entity, " +
-                      "maybe it was deleted in the meantime by another user. " +
-                      "The navigation is refreshed for you.");
+                    await _messageDialogService.ShowInfoDialogAsync("Could not load the entity, " +
+                        "maybe it was deleted in the meantime by another user. " +
+                        "The navigation is refreshed for you.");
                     await NavigationViewModel.LoadAsync();
                     return;
                 }
